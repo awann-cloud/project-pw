@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathC - Bank Soal Matematika</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Additional CSS for improved UI */
+        .user-menu-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .user-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #667eea;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+        }
+
+        .user-icon:hover {
+            background-color: #4c51bf;
+            transform: scale(1.05);
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 110%;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            min-width: 180px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+
+        .user-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-header {
+            padding: 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .dropdown-header h3 {
+            margin: 0;
+            font-size: 14px;
+            color: #2d3748;
+            font-weight: 500;
+        }
+
+        .dropdown-options {
+            padding: 8px 0;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            text-decoration: none;
+            color: #4a5568;
+            transition: all 0.2s ease;
+            gap: 12px;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f7fafc;
+            color: #2d3748;
+        }
+
+        .dropdown-item i {
+            width: 16px;
+            color: #667eea;
+        }
+
+        /* Modal improvements */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 0;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 450px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            transition: all 0.2s ease;
+        }
+
+        .close:hover {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        .auth-tabs {
+            display: flex;
+            background: #f8fafc;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 500;
+            color: #64748b;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .auth-tab.active {
+            color: #667eea;
+            background: white;
+            border-radius: 16px 16px 0 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+
+        .auth-header {
+            padding: 32px 32px 16px;
+            text-align: center;
+        }
+
+        .auth-header h2 {
+            margin: 0 0 8px;
+            font-size: 24px;
+            color: #2d3748;
+        }
+
+        .auth-header p {
+            color: #64748b;
+            margin: 0;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 0 32px 32px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Form styles improvements */
+        .auth-form {
+            margin-top: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #374151;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .password-input {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        .toggle-password:hover {
+            color: #374151;
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .social-login {
+            text-align: center;
+            margin-top: 24px;
+        }
+
+        .social-login p {
+            color: #6b7280;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .social-login p::before,
+        .social-login p::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: #e5e7eb;
+        }
+
+        .social-login p::before {
+            left: 0;
+        }
+
+        .social-login p::after {
+            right: 0;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .btn-social {
+            width: 45px;
+            height: 45px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-social:hover {
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        /* Remove old auth buttons from header */
+        .auth-buttons {
+            display: none;
+        }
+
+        /* Adjust header layout */
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        /* Video container styles */
+        .video-container {
+            margin: 24px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            height: 200px;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header with Navbar -->
+        <header class="header">
+            <div class="container header-container">
+                <div class="logo">
+                    <div class="logo-icon"><i class="fas fa-square-root-variable"></i></div>
+                    <span class="logo-text">MathC</span>
+                </div>
+                
+                <nav class="main-nav">
+                    <ul class="nav-list">
+                        <li><a href="#beranda" class="active">Beranda</a></li>
+                        <li class="dropdown">
+                            <a href="#topik">Topik <i class="fas fa-chevron-down"></i></a>
+                            <div class="dropdown-content">
+                                <a href="#algebra">Aljabar</a>
+                                <a href="#geometri">Geometri</a>
+                                <a href="#kalkulus">Kalkulus</a>
+                                <a href="#statistika">Statistika</a>
+                                <a href="#probabilitas">Probabilitas</a>
+                            </div>
+                        </li>
+                        <li><a href="latihan.html">Latihan</a></li>
+                        <li><a href="#rumus">Rumus</a></li>
+                        <li><a href="#tentang">Tentang Kami</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </nav>
+                
+                <!-- User Icon with Dropdown -->
+                <div class="user-menu-container">
+                    <div class="user-icon" id="userIcon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="dropdown-header">
+                            <h3>Akun Saya</h3>
+                        </div>
+                        <div class="dropdown-options">
+                            <a href="#" id="loginOption" class="dropdown-item">
+                                <i class="fas fa-sign-in-alt"></i>
+                                <span>Masuk</span>
+                            </a>
+                            <a href="#" id="signupOption" class="dropdown-item">
+                                <i class="fas fa-user-plus"></i>
+                                <span>Daftar</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="mobile-menu-toggle">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Login & Signup Modal -->
+        <div id="authModal" class="modal">
+            <div class="modal-content">
+                <button class="close" id="closeModal">&times;</button>
+                
+                <div class="auth-tabs">
+                    <div class="auth-tab active" id="loginTab">Masuk</div>
+                    <div class="auth-tab" id="signupTab">Daftar</div>
+                </div>
+                
+                <!-- Login Tab Content -->
+                <div class="tab-content active" id="loginContent">
+                    <div class="auth-header">
+                        <h2>Masuk ke MathC</h2>
+                        <p>Lanjutkan perjalanan belajarmu</p>
+                    </div>
+                    
+                    <div class="video-container">
+                        <video autoplay muted loop playsinline>
+                            <source src="/static/img/5182811-hd_1920_1080_30fps.mp4" type="video/mp4">
+                            Browser anda tidak mendukung tag video.
+                        </video>
+                    </div>
+                    
+                    <form class="auth-form">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" placeholder="Masukkan email anda" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Kata Sandi</label>
+                            <div class="password-input">
+                                <input type="password" id="password" placeholder="Masukkan kata sandi" required>
+                                <i class="fas fa-eye-slash toggle-password"></i>
+                            </div>
+                        </div>
+                        <div class="form-options">
+                            <div class="remember-me">
+                                <input type="checkbox" id="remember">
+                                <label for="remember">Ingat saya</label>
+                            </div>
+                            <a href="#" class="forgot-password">Lupa kata sandi?</a>
+                        </div>
+                        <button type="submit" class="btn btn-auth">Masuk</button>
+                        <div class="social-login">
+                            <p>Atau masuk dengan</p>
+                            <div class="social-buttons">
+                                <button type="button" class="btn-social google">
+                                    <i class="fab fa-google"></i>
+                                </button>
+                                <button type="button" class="btn-social facebook">
+                                    <i class="fab fa-facebook-f"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Signup Tab Content -->
+                <div class="tab-content" id="signupContent">
+                    <div class="auth-header">
+                        <h2>Buat Akun Baru</h2>
+                        <p>Bergabunglah dengan komunitas belajar kami</p>
+                    </div>
+                    
+                    <div class="video-container">
+                        <video autoplay muted loop playsinline>
+                            <source src="/static/img/5182811-hd_1920_1080_30fps.mp4" type="video/mp4">
+                            Browser anda tidak mendukung tag video.
+                        </video>
+                    </div>
+                    
+                    <form class="auth-form">
+                        <div class="form-group">
+                            <label for="fullname">Nama Lengkap</label>
+                            <input type="text" id="fullname" placeholder="Masukkan nama lengkap" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-email">Email</label>
+                            <input type="email" id="signup-email" placeholder="Masukkan email anda" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-password">Kata Sandi</label>
+                            <div class="password-input">
+                                <input type="password" id="signup-password" placeholder="Buat kata sandi" required>
+                                <i class="fas fa-eye-slash toggle-password"></i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm-password">Konfirmasi Kata Sandi</label>
+                            <div class="password-input">
+                                <input type="password" id="confirm-password" placeholder="Konfirmasi kata sandi" required>
+                                <i class="fas fa-eye-slash toggle-password"></i>
+                            </div>
+                        </div>
+                        <div class="form-options">
+                            <div class="agreement">
+                                <input type="checkbox" id="terms" required>
+                                <label for="terms">Saya setuju dengan <a href="#">Syarat & Ketentuan</a></label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-auth">Daftar</button>
+                        <div class="social-login">
+                            <a href="index.html"><p>sudah punya akun?</p></a>
+                            <p>Atau daftar dengan</p>
+                            <div class="social-buttons">
+                                <button type="button" class="btn-social google">
+                                    <i class="fab fa-google"></i>
+                                </button>
+                                <button type="button" class="btn-social facebook">
+                                    <i class="fab fa-facebook-f"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero Section with Carousel -->
+        <section class="hero-section" id="beranda">
+            <div class="carousel-container">
+                <div class="carousel-wrapper">
+                    <div class="carousel-slide active">
+                        <div class="carousel-content">
+                            <h1>Belajar Matematika Jadi Lebih Mudah</h1>
+                            <p>Tingkatkan kemampuanmu dengan ribuan latihan soal dan pembahasan terstruktur</p>
+                            <a href="materi.html" class="btn btn-primary btn-lg">Mulai Belajar</a>
+                        </div>
+                        <div class="overlay"></div>
+                        <div class="bg-image" style="background-image: url('/static/img/pexels-ferran-perez-1844589-3427031.jpg')"></div>
+                    </div>
+                    <div class="carousel-slide">
+                        <div class="carousel-content">
+                            <h1>Kumpulan Rumus Lengkap</h1>
+                            <p>Akses rumus matematika untuk semua materi dengan penjelasan dan contoh aplikasi</p>
+                            <a href="#rumus" class="btn btn-primary btn-lg">Lihat Rumus</a>
+                        </div>
+                        <div class="overlay"></div>
+                        <div class="bg-image" style="background-image: url('/static/img/pexels-karolina-grabowska-4039778.jpg')"></div>
+                    </div>
+                    <div class="carousel-slide">
+                        <div class="carousel-content">
+                            <h1>Siap Hadapi Ujian</h1>
+                            <p>Persiapkan diri dengan latihan soal-soal ujian terbaru dan pembahasannya</p>
+                            <a href="#latihan" class="btn btn-primary btn-lg">Coba Ujian</a>
+                        </div>
+                        <div class="overlay"></div>
+                        <div class="bg-image" style="background-image: url('/static/img/pexels-loaldesign-31735038.jpg')"></div>
+                    </div>
+                </div>
+                
+                <div class="carousel-controls">
+                    <button class="carousel-arrow prev"><i class="fas fa-chevron-left"></i></button>
+                    <div class="carousel-dots">
+                        <span class="dot active" data-slide="0"></span>
+                        <span class="dot" data-slide="1"></span>
+                        <span class="dot" data-slide="2"></span>
+                    </div>
+                    <button class="carousel-arrow next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section" id="features">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Fitur Unggulan</h2>
+                    <p>MathC menyediakan berbagai fitur untuk membantu proses belajarmu</p>
+                </div>
+                <div class="feature-cards">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <h3>Latihan Interaktif</h3>
+                        <p>Pilih soal sesuai topik dan kerjakan langsung di browser dengan feedback instan</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h3>Pembahasan Lengkap</h3>
+                        <p>Setiap soal dilengkapi solusi step-by-step untuk memudahkan pemahaman</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Nilai & Statistik</h3>
+                        <p>Lihat progres belajar dan statistik jawabanmu dari waktu ke waktu</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <h3>Bank Soal Terstruktur</h3>
+                        <p>Ribuan soal tersusun berdasarkan kurikulum dan tingkat kesulitan</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Topics Section -->
+        <section class="topics-section" id="topik">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Topik Populer</h2>
+                    <p><a href="materi.html">Pilih topik sesuai kebutuhanmu dan mulai belajar sekarang</p></a>
+                </div>
+                <div class="topics-grid">
+                    <div class="topic-card" id="algebra">
+                        <div class="topic-icon">
+                            <span class="math-symbol">∑</span>
+                        </div>
+                        <h3>Aljabar</h3>
+                        <p>Persamaan, pertidaksamaan, fungsi, dan polinomial</p>
+                        <a href="#algebra" class="topic-link">Jelajahi <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="topic-card" id="geometri">
+                        <div class="topic-icon">
+                            <span class="math-symbol">△</span>
+                        </div>
+                        <h3>Geometri</h3>
+                        <p>Bangun datar, bangun ruang, trigonometri</p>
+                        <a href="#geometri" class="topic-link">Jelajahi <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="topic-card" id="kalkulus">
+                        <div class="topic-icon">
+                            <span class="math-symbol">∫</span>
+                        </div>
+                        <h3>Kalkulus</h3>
+                        <p>Limit, turunan, integral</p>
+                        <a href="#kalkulus" class="topic-link">Jelajahi <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="topic-card" id="statistika">
+                        <div class="topic-icon">
+                            <span class="math-symbol">σ</span>
+                        </div>
+                        <h3>Statistika</h3>
+                        <p>Mean, median, modus, distribusi probabilitas</p>
+                        <a href="#statistika" class="topic-link">Jelajahi <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Practice Section -->
+        <section class="practice-section" id="latihan">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Latihan Terbaru</h2>
+                    <p>Coba beberapa soal terbaru kami dan uji kemampuanmu</p>
+                </div>
+                <div class="practice-grid">
+                    <div class="practice-card">
+                        <div class="difficulty easy">Mudah</div>
+                        <h3>Soal 1: Persamaan Linear</h3>
+                        <p>Selesaikan: 2x + 3 = 11</p>
+                        <div class="card-footer">
+                            <span class="category">Aljabar</span>
+                            <a href="#" class="btn btn-outline">Kerjakan</a>
+                        </div>
+                    </div>
+                    <div class="practice-card">
+                        <div class="difficulty medium">Sedang</div>
+                        <h3>Soal 2: Luas Segitiga</h3>
+                        <p>Hitung luas segitiga dengan a=5, t=8</p>
+                        <div class="card-footer">
+                            <span class="category">Geometri</span>
+                            <a href="#" class="btn btn-outline">Kerjakan</a>
+                        </div>
+                    </div>
+                    <div class="practice-card">
+                        <div class="difficulty hard">Sulit</div>
+                        <h3>Soal 3: Turunan Fungsi</h3>
+                        <p>Turunan f(x) = x<sup>3</sup> + 2x</p>
+                        <div class="card-footer">
+                            <span class="category">Kalkulus</span>
+                            <a href="#" class="btn btn-outline">Kerjakan</a>
+                        </div>
+                    </div>
+                    <div class="practice-card">
+                        <div class="difficulty medium">Sedang</div>
+                        <h3>Soal 4: Rata-rata</h3>
+                        <p>Hitung mean dari data: {4, 7, 9, 2, 6}</p>
+                        <div class="card-footer">
+                            <span class="category">Statistika</span>
+                            <a href="#" class="btn btn-outline">Kerjakan</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="more-practice">
+                    <a href="latihan.html" class="btn btn-primary">Lihat Semua Soal</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Formulas Section -->
+        <section class="formulas-section" id="rumus">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Rumus Cepat</h2>
+                    <p><a href="rumus.html">Kumpulan rumus dasar untuk referensi belajarmu</a></p>
+                </div>
+                <div class="formulas-grid">
+                    <div class="formula-card">
+                        <div class="formula-title">Luas Persegi</div>
+                        <div class="formula-content">L = s<sup>2</sup></div>
+                    </div>
+                    <div class="formula-card">
+                        <div class="formula-title">Luas Lingkaran</div>
+                        <div class="formula-content">A = πr<sup>2</sup></div>
+                    </div>
+                    <div class="formula-card">
+                        <div class="formula-title">Volume Balok</div>
+                        <div class="formula-content">V = p × l × t</div>
+                    </div>
+                    <div class="formula-card">
+                        <div class="formula-title">Turunan Dasar</div>
+                        <div class="formula-content">(x<sup>n</sup>)' = nx<sup>n-1</sup></div>
+                    </div>
+                    <div class="formula-card">
+                        <div class="formula-title">Integral Dasar</div>
+                        <div class="formula-content">∫ x<sup>n</sup> dx = x<sup>n+1</sup>/(n+1) + C</div>
+                    </div>
+                    <div class="formula-card">
+                        <div class="formula-title">Rumus ABC</div>
+                        <div class="formula-content">x = (-b ± √(b<sup>2</sup>-4ac))/2a</div>
+                    </div>
+                </div>
+                <div class="formulas-action">
+                    <a href="rumus.html" class="btn btn-primary">Lihat Semua Rumus</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about-section" id="tentang">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Tentang MathC</h2>
+                </div>
+                <div class="about-content">
+                    <div class="about-image">
+                        <img src="/static/img/pexels-tara-winstead-7723354.jpg" alt="MathC Team">
+                    </div><div class="about-text">
+                        <p>MathC adalah platform pembelajaran matematika yang dirancang khusus untuk membantu siswa menguasai konsep matematika dengan lebih mudah dan menyenangkan.</p>
+                        <p>Kami menyediakan ribuan soal latihan dengan pembahasan lengkap, rumus-rumus penting, dan fitur interaktif untuk mendukung pembelajaran yang efektif.</p>
+                        <div class="about-stats">
+                            <div class="stat-item">
+                                <h3>1000+</h3>
+                                <p>Soal Latihan</p>
+                            </div>
+                            <div class="stat-item">
+                                <h3>50+</h3>
+                                <p>Topik Materi</p>
+                            </div>
+                            <div class="stat-item">
+                                <h3>100+</h3>
+                                <p>Rumus Lengkap</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section
+        <section class="contact-section" id="kontak">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Hubungi Kami</h2>
+                    <p>Ada pertanyaan atau saran? Kami siap membantu!</p>
+                </div>
+                <div class="contact-content">
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Email</h3>
+                                <p>info@mathc.id</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Telepon</h3>
+                                <p>+62 21 1234 5678</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Alamat</h3>
+                                <p>Jakarta, Indonesia</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contact-form">
+                        <form>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="name">Nama</label>
+                                    <input type="text" id="name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-email">Email</label>
+                                    <input type="email" id="contact-email" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="subject">Subjek</label>
+                                <input type="text" id="subject" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Pesan</label>
+                                <textarea id="message" rows="5" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Kirim Pesan</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section> -->
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <div class="footer-logo">
+                            <div class="logo-icon"><i class="fas fa-square-root-variable"></i></div>
+                            <span class="logo-text">MathC</span>
+                        </div>
+                        <p>Platform pembelajaran matematika terpercaya untuk meningkatkan kemampuanmu.</p>
+                        <div class="social-links">
+                            <a href="https://www.facebook.com/share/14thasCej6/" class="social-link"><i class="fab fa-facebook"></i></a>
+                            <a href="https://www.instagram.com/nuredyrama__?igsh=MWQwcWtuZHMxeGFibQ==" class="social-link"><i class="fab fa-instagram"></i></a>
+                            <a href="https://www.youtube.com/@nuredyrama5517" class="social-link"><i class="fab fa-youtube"></i></a>
+                            <a href="https://x.com/SenTri_fugal" class="social-link"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                    <div class="footer-section">
+                        <h3>Navigasi</h3>
+                        <ul class="footer-links">
+                            <li><a href="#beranda">Beranda</a></li>
+                            <li><a href="#topik">Topik</a></li>
+                            <li><a href="#latihan">Latihan</a></li>
+                            <li><a href="#rumus">Rumus</a></li>
+                            <li><a href="#tentang">Tentang Kami</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3>Topik Populer</h3>
+                        <ul class="footer-links">
+                            <li><a href="#algebra">Aljabar</a></li>
+                            <li><a href="#geometri">Geometri</a></li>
+                            <li><a href="#kalkulus">Kalkulus</a></li>
+                            <li><a href="#statistika">Statistika</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3>Dukungan</h3>
+                        <ul class="footer-links">
+                            <li><a href="#kontak">Hubungi Kami</a></li>
+                            <li><a href="#faq">FAQ</a></li>
+                            <li><a href="#bantuan">Bantuan</a></li>
+                            <li><a href="#kebijakan">Kebijakan Privasi</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <div class="footer-bottom-content">
+                        <p>&copy; 2025 MathC. Semua hak cipta dilindungi.</p>
+                        <div class="footer-bottom-links">
+                            <a href="#syarat">Syarat & Ketentuan</a>
+                            <span class="separator">|</span>
+                            <a href="#kebijakan">Kebijakan Privasi</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // User Dropdown Toggle
+        const userIcon = document.getElementById('userIcon');
+        const userDropdown = document.getElementById('userDropdown');
+
+        userIcon.addEventListener('click', function(e) {
+            e.stopPropagation();
+            userDropdown.classList.toggle('active');
+        });
+
+        document.addEventListener('click', function() {
+            userDropdown.classList.remove('active');
+        });
+
+
+        // Auth Modal
+        const authModal = document.getElementById('authModal');
+        const loginOption = document.getElementById('loginOption');
+        const signupOption = document.getElementById('signupOption');
+        const closeModal = document.getElementById('closeModal');
+        const loginTab = document.getElementById('loginTab');
+        const signupTab = document.getElementById('signupTab');
+        const loginContent = document.getElementById('loginContent');
+        const signupContent = document.getElementById('signupContent');
+
+        function openModal(tab = 'login') {
+            authModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            if (tab === 'signup') {
+                switchToSignup();
+            } else {
+                switchToLogin();
+            }
+        }
+
+        function closeModalFunc() {
+            authModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function switchToLogin() {
+            loginTab.classList.add('active');
+            signupTab.classList.remove('active');
+            loginContent.classList.add('active');
+            signupContent.classList.remove('active');
+        }
+
+        function switchToSignup() {
+            signupTab.classList.add('active');
+            loginTab.classList.remove('active');
+            signupContent.classList.add('active');
+            loginContent.classList.remove('active');
+        }
+
+        loginOption.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal('login');
+        });
+
+        signupOption.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal('signup');
+        });
+
+        closeModal.addEventListener('click', closeModalFunc);
+        authModal.addEventListener('click', (e) => {
+            if (e.target === authModal) {
+                closeModalFunc();
+            }
+        });
+
+        loginTab.addEventListener('click', switchToLogin);
+        signupTab.addEventListener('click', switchToSignup);
+
+        // Toggle Password Visibility
+        const toggleButtons = document.querySelectorAll('.toggle-password');
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const input = this.parentNode.querySelector('input');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    this.classList.remove('fa-eye-slash');
+                    this.classList.add('fa-eye');
+                } else {
+                    input.type = 'password';
+                    this.classList.remove('fa-eye');
+                    this.classList.add('fa-eye-slash');
+                }
+            });
+        });
+         document.getElementById('btnDaftar').addEventListener('click', function () {
+         window.location.href = 'index.html';
+        });
+
+        // Carousel functionality
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.dot');
+        const prevBtn = document.querySelector('.carousel-arrow.prev');
+        const nextBtn = document.querySelector('.carousel-arrow.next');
+        let currentSlide = 0;
+
+        function showSlide(n) {
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === n);
+                dots[index].classList.toggle('active', index === n);
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentSlide = index;
+                showSlide(currentSlide);
+            });
+        });
+
+        // Auto-play carousel
+        setInterval(nextSlide, 5000);
+
+        // Mobile Menu Toggle
+        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+        const mainNav = document.querySelector('.main-nav');
+
+        mobileMenuToggle.addEventListener('click', function() {
+            this.classList.toggle('active');
+            mainNav.classList.toggle('active');
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Form submissions
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                // Add your form submission logic here
+                alert('Form submitted successfully!');
+            });
+        });
+    </script>
+</body>
+</html>
